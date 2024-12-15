@@ -1,0 +1,63 @@
+# Крестики нолики игра
+# Варианты рамок ⸻ ⬆ ➡  ⬇ ︎⬅ ░︎█ •
+# Сколько клеток
+sheet_size = 3
+# Игровое поле
+sheet = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+def draw_sheet():
+    '''Игровое поле'''
+    print('_' * 7 * sheet_size)
+    for i in range(sheet_size):
+        print((' '* 3 + '  |  ')*3)
+        print('⬆ ',sheet[i*3], '|  ', sheet[1 + i*3],'  |  ', sheet[2 + i*3],'  ⬇')
+        print(('⸻'* 1 + '  |  ')*3)
+    print('_' * 7 * sheet_size)
+def game_go(index, char):
+    '''Делаем ход'''
+    if (index > 9 or index < 1 or sheet[index-1] in ('X', 'O')):
+        return False
+    sheet[index-1] = char
+    return True
+def game_wick():
+    wick = False
+    wiсk_test = (
+        (0, 1, 2), (3, 4, 5), (6, 7, 8), #горизонталь
+        (0, 3, 6), (1, 4, 7), (2, 5, 8), #вертикаль
+        (0, 4, 8), (2, 4, 6) #диагональ
+    )
+    for pos in wiсk_test:
+        if (sheet[pos[0]] == sheet[pos[1]] and sheet[pos[1]] == sheet[pos[2]]):
+            wick = sheet[pos[0]]
+    return wick
+def game_SW():
+    # Какой игрок
+    player = 'X'
+    # Сколько ходов
+    step = 1
+    draw_sheet()
+    while (step < 10) and game_wick() == False:
+        try:
+            index = int(input('Ходит игрок ' + player + '. Ввести номер поля 1-9:'))
+            if (1 <= index <= 9):
+                if (game_go(index, player)):
+                    print('Ход принят')
+                    if player == 'X':
+                        player = "O"
+                    else:
+                        player = "X"
+                    draw_sheet()
+                    step += 1
+                else:
+                    print('Ячейка занята, выберите другую')
+            else:
+                print('Введите число от 1 до 9.')
+        except ValueError:
+            print('Введите целое число (Без дробей и использования букв) от 1 до 9.')
+
+    if step == 10:
+        print('Ничья!')
+    else:
+        print('Победитель ' + game_wick())
+
+print('Начало первой игры ХО')
+game_SW()
